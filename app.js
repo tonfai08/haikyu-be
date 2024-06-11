@@ -7,7 +7,7 @@ const app = express();
 
 const mongoURI =
   process.env.MONGO_URI ||
-  "mongodb+srv://tonbee11:7YftVSkhGl3SwLTI@cluster0.ccpp974.mongodb.net/myDatabaseName";
+  "mongodb+srv://tonbee11:7YftVSkhGl3SwLTI@cluster0.ccpp974.mongodb.net/test";
 
 mongoose
   .connect(mongoURI)
