@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const userRouter = require("./routes/users");
 const seatRouter = require("./routes/seat");
 const app = express();
+const cors = require("cors");
 
 const mongoURI =
   process.env.MONGO_URI ||
@@ -14,6 +15,7 @@ mongoose
   .then(() => console.log("MongoDB connected successfully"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
+app.use(cors());
 app.use(express.json());
 
 app.use("/users", userRouter);
