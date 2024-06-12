@@ -51,6 +51,7 @@ exports.getSeatsGroupedByRow = async () => {
             $push: {
               // สร้างอาร์เรย์ของที่นั่งในแต่ละกลุ่ม
               name: "$name",
+              price: "$price",
               reservedBy: "$reservedBy",
               status: "$status",
             },
