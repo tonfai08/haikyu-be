@@ -75,3 +75,17 @@ exports.getSeatsGroupedByRow = async () => {
     throw error;
   }
 };
+
+exports.reserveSeat = async (seatName, token) => {
+  return Seat.findOneAndUpdate(
+    { name: seatName, "status.statusType": "available" },
+    {
+      $set: {
+        "status.statusType": "reserved",
+        "reservedBy.token": token,
+        "status.time": new Date(),
+      },
+    },
+    { new: true }
+  );
+};

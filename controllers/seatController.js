@@ -28,6 +28,36 @@ exports.createSeats = async (req, res) => {
   }
 };
 
+exports.reserveSeats = async (req, res) => {
+  const seats = req.body.seats;
+  const token = req.cookies.userToken;
+
+  if (!seats || seats.length === 0) {
+    return res.status(400).send("No seats provided for reservation.");
+  }
+
+  try {
+    const seatsToReserve = seats.filter(
+      (seat) => seat.status.statusType === "available"
+    );
+    if (seatsToReserve.length === 0) {
+      return res.status(400).send("No available seats to reserve.");
+    }
+
+    const reservationResults = await Promise.all(
+      seatsToReserve.map((seat) => seatService.reserveSeat(seat.name, token))
+    );
+
+    res.status(200).json({
+      message: `Successfully reserved ${reservationResults.length} seats.`,
+      reservedSeats: reservationResults,
+    });
+  } catch (error) {
+    console.error("Error reserving seats:", error);
+    res.status(500).send("Failed to reserve seats due to an error.");
+  }
+};
+
 exports.deleteSeatsByRow = async (req, res) => {
   const row = req.params.row; // รับ row จาก parameter
   try {
