@@ -43,6 +43,7 @@ exports.deleteSeatsByRow = async (row) => {
 
 exports.getSeatsGroupedByRow = async () => {
   try {
+    await resetExpiredReservations();
     const seats = await Seat.aggregate([
       {
         $group: {
@@ -125,3 +126,26 @@ exports.reserveSeats = async (seats, token) => {
     return { error: true, message: "Failed to reserve seats due to an error." };
   }
 };
+
+async function resetExpiredReservations() {
+  const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+
+  try {
+    const results = await Seat.updateMany(
+      {
+        "status.statusType": "reserved",
+        "status.time": { $lt: fiveMinutesAgo },
+      },
+      {
+        $set: {
+          "status.statusType": "available",
+          "reservedBy.token": "",
+        },
+      }
+    );
+
+    console.log(`Expired reservations reset: ${results.modifiedCount}`);
+  } catch (error) {
+    console.error("Error resetting expired reservations:", error);
+  }
+}
