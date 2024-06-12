@@ -10,9 +10,18 @@ exports.getSeats = async (req, res) => {
   }
 };
 exports.createSeats = async (req, res) => {
-  const { row, count } = req.body;
+  const { row, count, price } = req.body;
+  if (!row) {
+    return res.status(400).send("Missing parameter: row");
+  }
+  if (count == null) {
+    return res.status(400).send("Missing parameter: count");
+  }
+  if (price == null) {
+    return res.status(400).send("Missing parameter: price");
+  }
   try {
-    await seatService.createSeats(row, count);
+    await seatService.createSeats(row, count, price);
     res.status(201).send(`Seats created for row ${row} with count ${count}`);
   } catch (error) {
     res.status(500).send("Error creating seats: " + error.message);

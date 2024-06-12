@@ -4,6 +4,7 @@ const seatSchema = new mongoose.Schema({
   row: { type: String, required: true },
   number: { type: Number, required: true },
   name: { type: String, required: true },
+  price: { type: Number, required: true },
   reservedBy: {
     name: String,
     token: String,

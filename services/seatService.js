@@ -1,6 +1,6 @@
 const Seat = require("../models/seat");
 
-exports.createSeats = async (row, count) => {
+exports.createSeats = async (row, count, price) => {
   try {
     for (let i = 1; i <= count; i++) {
       const seatName = `${row}-${i}`;
@@ -8,6 +8,7 @@ exports.createSeats = async (row, count) => {
         row: row,
         number: i,
         name: seatName,
+        price: price,
         status: { statusType: "available" },
       });
       await seat.save();
