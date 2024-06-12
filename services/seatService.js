@@ -76,16 +76,52 @@ exports.getSeatsGroupedByRow = async () => {
   }
 };
 
-exports.reserveSeat = async (seatName, token) => {
-  return Seat.findOneAndUpdate(
-    { name: seatName, "status.statusType": "available" },
-    {
-      $set: {
-        "status.statusType": "reserved",
-        "reservedBy.token": token,
-        "status.time": new Date(),
-      },
-    },
-    { new: true }
-  );
+exports.reserveSeats = async (seats, token) => {
+  try {
+    // Check if any seat is not available
+    const unavailableSeats = await Seat.find({
+      name: { $in: seats.map((seat) => seat.name) },
+      "status.statusType": { $ne: "available" },
+    });
+
+    // If there are unavailable seats, return an error message
+    if (unavailableSeats.length > 0) {
+      return {
+        error: true,
+        message: "One or more seats are not available for reservation.",
+      };
+    }
+
+    // Update each seat to be reserved if they are available
+    const updatePromises = seats.map((seat) => {
+      return Seat.findOneAndUpdate(
+        { name: seat.name, "status.statusType": "available" },
+        {
+          $set: {
+            "status.statusType": "reserved",
+            "reservedBy.token": token,
+            "status.time": new Date(),
+          },
+        },
+        { new: true, runValidators: true }
+      );
+    });
+
+    // Wait for all updates to complete
+    const updatedSeats = await Promise.all(updatePromises);
+
+    // Filter out any null responses (if a seat was not found or not updated)
+    const successfullyReservedSeats = updatedSeats.filter(
+      (seat) => seat !== null
+    );
+
+    return {
+      success: true,
+      message: `Successfully reserved ${successfullyReservedSeats.length} seats.`,
+      seats: successfullyReservedSeats,
+    };
+  } catch (error) {
+    console.error("Error reserving seats:", error);
+    return { error: true, message: "Failed to reserve seats due to an error." };
+  }
 };

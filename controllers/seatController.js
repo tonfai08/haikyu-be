@@ -30,24 +30,17 @@ exports.createSeats = async (req, res) => {
 
 exports.reserveSeats = async (req, res) => {
   const seats = req.body.seats;
-  const token = req.cookies.userToken;
+  const token = req.body.token;
 
   if (!seats || seats.length === 0) {
     return res.status(400).send("No seats provided for reservation.");
   }
 
   try {
-    const seatsToReserve = seats.filter(
-      (seat) => seat.status.statusType === "available"
-    );
-    if (seatsToReserve.length === 0) {
-      return res.status(400).send("No available seats to reserve.");
+    const reservationResults = await seatService.reserveSeats(seats, token);
+    if (reservationResults.error) {
+      return res.status(400).send(reservationResults.message);
     }
-
-    const reservationResults = await Promise.all(
-      seatsToReserve.map((seat) => seatService.reserveSeat(seat.name, token))
-    );
-
     res.status(200).json({
       message: `Successfully reserved ${reservationResults.length} seats.`,
       reservedSeats: reservationResults,

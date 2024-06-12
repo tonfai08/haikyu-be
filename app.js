@@ -21,7 +21,7 @@ app.use(express.json());
 app.use("/users", userRouter);
 app.use("/seat", seatRouter);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
