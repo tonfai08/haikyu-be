@@ -70,20 +70,18 @@ exports.getGroupedSeats = async (req, res) => {
     res.status(500).send("Error fetching grouped seats: " + error.message);
   }
 };
-exports.updateSeat = async (req, res) => {
-  console.log("req", req);
-  const { seatName } = req.params;
-  const { price, reservedBy, status } = req.body;
+exports.updateSeats = async (req, res) => {
+  const seatNames = req.body.seats.map((seat) => seat.name);
+  const updates = req.body.update;
 
   try {
-    const updatedSeat = await seatService.updateSeatDetails(seatName, {
-      price,
-      reservedBy,
-      status,
+    const result = await seatService.updateMultipleSeats(seatNames, updates);
+    res.json({
+      message: `Successfully updated ${result.nModified} seats.`,
+      details: result,
     });
-    res.json(updatedSeat);
   } catch (error) {
-    console.error("Error updating seat:", error);
-    res.status(500).send(error.message);
+    console.error("Error updating seats:", error);
+    res.status(500).send("Failed to update seats due to an error.");
   }
 };

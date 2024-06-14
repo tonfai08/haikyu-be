@@ -7,6 +7,7 @@ const seatSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   reservedBy: {
     name: String,
+    email: String,
     token: String,
     slip: String,
   },

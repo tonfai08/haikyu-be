@@ -144,29 +144,24 @@ async function resetExpiredReservations() {
   }
 }
 
-exports.updateSeatDetails = async (seatName, updates) => {
+exports.updateMultipleSeats = async (seatNames, updates) => {
   try {
-    const { price, reservedBy, status } = updates;
-    const updatedSeat = await Seat.findOneAndUpdate(
-      { name: seatName },
+    const results = await Seat.updateMany(
+      { name: { $in: seatNames } },
       {
         $set: {
-          price: price,
-          reservedBy: reservedBy,
-          status: status,
+          price: updates.price,
+          reservedBy: updates.reservedBy,
+          status: updates.status,
         },
       },
       { new: true, runValidators: true }
     );
 
-    if (!updatedSeat) {
-      throw new Error(`No seat found with the name ${seatName}`);
-    }
-
-    console.log(`Seat ${seatName} updated successfully.`);
-    return updatedSeat;
+    console.log(`Updated ${results.nModified} seats.`);
+    return results; // This will return the result of the update operation
   } catch (error) {
-    console.error(`Error updating seat ${seatName}:`, error);
+    console.error("Error updating seats:", error);
     throw error;
   }
 };
