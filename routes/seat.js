@@ -6,6 +6,7 @@ router.get("/", seatController.getSeats);
 router.get("/grouped", seatController.getGroupedSeats);
 router.post("/create-seats", seatController.createSeats);
 router.post("/reserve-seats", seatController.reserveSeats);
+router.put("/update-seat/:seatName", seatController.updateSeat);
 router.delete("/delete-by-row/:row", seatController.deleteSeatsByRow);
 
 module.exports = router;
