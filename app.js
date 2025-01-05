@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const userRouter = require("./routes/users");
 const seatRouter = require("./routes/seat");
+const orderRouter = require("./routes/order");
 const app = express();
 const cors = require("cors");
 
@@ -20,6 +21,7 @@ app.use(express.json());
 
 app.use("/users", userRouter);
 app.use("/seat", seatRouter);
+app.use("/order", orderRouter);
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
