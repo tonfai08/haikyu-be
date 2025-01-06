@@ -3,13 +3,13 @@ const Order = require("../models/order");
 exports.createOrder = async (orderData) => {
   try {
     const order = new Order(orderData);
-    return await order.save();
+    await order.save();
+    return order;
   } catch (error) {
-    console.error("Error creating order:", error);
+    console.error("Error creating order in service:", error);
     throw error;
   }
 };
-
 exports.getAllOrders = async () => {
   try {
     return await Order.find().sort({ createdAt: -1 });

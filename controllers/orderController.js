@@ -1,8 +1,17 @@
 const orderService = require("../services/orderService");
 
 exports.createOrder = async (req, res) => {
-  const { email, name, address, tel, book1, book2, totalPrice, typeShipping } =
-    req.body;
+  const {
+    email,
+    name,
+    address,
+    tel,
+    book1,
+    book2,
+    totalPrice,
+    typeShipping,
+    slip,
+  } = req.body;
 
   // ตรวจสอบพารามิเตอร์ที่จำเป็น
   if (
@@ -12,12 +21,14 @@ exports.createOrder = async (req, res) => {
     !tel ||
     book1 == null ||
     book2 == null ||
-    totalPrice == null
+    totalPrice == null ||
+    !slip // ตรวจสอบว่ามี Base64 Slip หรือไม่
   ) {
     return res.status(400).send("Missing required parameters.");
   }
 
   try {
+    // ส่งข้อมูลไปยัง Service เพื่อบันทึกในฐานข้อมูล
     const order = await orderService.createOrder({
       email,
       name,
@@ -26,8 +37,10 @@ exports.createOrder = async (req, res) => {
       book1,
       book2,
       totalPrice,
-      typeShipping,
+      typeShipping: typeShipping || "standard",
+      slip, // เก็บ Base64 Slip ในฐานข้อมูล
     });
+
     res.status(201).json({ message: "Order created successfully", order });
   } catch (error) {
     console.error("Error creating order:", error);

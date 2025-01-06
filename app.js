@@ -7,6 +7,9 @@ const orderRouter = require("./routes/order");
 const app = express();
 const cors = require("cors");
 
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ limit: "10mb", extended: true }));
+
 const mongoURI =
   process.env.MONGO_URI ||
   "mongodb+srv://tonbee11:7YftVSkhGl3SwLTI@cluster0.ccpp974.mongodb.net/test";

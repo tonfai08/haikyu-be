@@ -8,7 +8,13 @@ const orderSchema = new mongoose.Schema({
   book1: { type: Number, required: true },
   book2: { type: Number, required: true },
   totalPrice: { type: Number, required: true },
-  typeShipping: { type: String, default: "standard" }, // standard, express, etc.
+  typeShipping: { type: String, default: "standard" },
+  status: {
+    type: String,
+    enum: ["pending", "paid"],
+    default: "pending",
+  },
+  slip: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
 });
 
