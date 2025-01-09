@@ -50,11 +50,37 @@ exports.createOrder = async (req, res) => {
 
 exports.getAllOrders = async (req, res) => {
   try {
-    const orders = await orderService.getAllOrders();
+    const { email, name, orderId, status } = req.query;
+
+    // ส่งตัวกรองไปยัง Service
+    const filter = {};
+    if (email) filter.email = { $regex: email, $options: "i" }; // ค้นหา email แบบไม่สนตัวพิมพ์
+    if (name) filter.name = { $regex: name, $options: "i" }; // ค้นหาชื่อแบบไม่สนตัวพิมพ์
+    if (orderId) filter.orderId = Number(orderId); // ค้นหา orderId
+    if (status) filter.status = status; // ค้นหา status
+
+    const orders = await orderService.getAllOrders(filter);
     res.status(200).json(orders);
   } catch (error) {
     console.error("Error fetching orders:", error);
     res.status(500).send("Failed to fetch orders: " + error.message);
+  }
+};
+
+exports.updateOrder = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateData = req.body;
+
+    const updatedOrder = await orderService.updateOrder(id, updateData);
+    if (!updatedOrder) {
+      return res.status(404).send("Order not found");
+    }
+
+    res.status(200).json(updatedOrder);
+  } catch (error) {
+    console.error("Error updating order:", error);
+    res.status(500).send("Failed to update order: " + error.message);
   }
 };
 

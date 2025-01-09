@@ -11,9 +11,11 @@ const orderSchema = new mongoose.Schema({
   typeShipping: { type: String, default: "standard" },
   status: {
     type: String,
-    enum: ["pending", "paid"],
+    enum: ["pending", "paid", "preparing", "shipping", "delivered"],
     default: "pending",
   },
+  postId: { type: String, default: null },
+  orderId: { type: Number, unique: true },
   slip: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
 });
