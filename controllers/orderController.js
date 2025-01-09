@@ -13,7 +13,6 @@ exports.createOrder = async (req, res) => {
     slip,
   } = req.body;
 
-  // ตรวจสอบพารามิเตอร์ที่จำเป็น
   if (
     !email ||
     !name ||
@@ -22,13 +21,12 @@ exports.createOrder = async (req, res) => {
     book1 == null ||
     book2 == null ||
     totalPrice == null ||
-    !slip // ตรวจสอบว่ามี Base64 Slip หรือไม่
+    !slip
   ) {
     return res.status(400).send("Missing required parameters.");
   }
 
   try {
-    // ส่งข้อมูลไปยัง Service เพื่อบันทึกในฐานข้อมูล
     const order = await orderService.createOrder({
       email,
       name,
@@ -38,7 +36,7 @@ exports.createOrder = async (req, res) => {
       book2,
       totalPrice,
       typeShipping: typeShipping || "standard",
-      slip, // เก็บ Base64 Slip ในฐานข้อมูล
+      slip,
     });
 
     res.status(201).json({ message: "Order created successfully", order });
@@ -54,10 +52,10 @@ exports.getAllOrders = async (req, res) => {
 
     // ส่งตัวกรองไปยัง Service
     const filter = {};
-    if (email) filter.email = { $regex: email, $options: "i" }; // ค้นหา email แบบไม่สนตัวพิมพ์
-    if (name) filter.name = { $regex: name, $options: "i" }; // ค้นหาชื่อแบบไม่สนตัวพิมพ์
-    if (orderId) filter.orderId = Number(orderId); // ค้นหา orderId
-    if (status) filter.status = status; // ค้นหา status
+    if (email) filter.email = { $regex: email, $options: "i" };
+    if (name) filter.name = { $regex: name, $options: "i" };
+    if (orderId) filter.orderId = Number(orderId);
+    if (status) filter.status = status;
 
     const orders = await orderService.getAllOrders(filter);
     res.status(200).json(orders);

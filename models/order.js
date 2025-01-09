@@ -20,6 +20,15 @@ const orderSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
+orderSchema.pre("save", async function (next) {
+  if (!this.orderId) {
+    const lastOrder = await this.constructor.findOne().sort({ orderId: -1 });
+    console.log("Last Order:", lastOrder);
+    this.orderId = lastOrder ? lastOrder.orderId + 1 : 1;
+  }
+  next();
+});
+
 const Order = mongoose.model("Order", orderSchema);
 
 module.exports = Order;
