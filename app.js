@@ -7,6 +7,7 @@ const userRouter = require("./routes/users");
 const seatRouter = require("./routes/seat");
 const orderRouter = require("./routes/order");
 const customerRouter = require("./routes/customer"); // ✅ Import Route
+const versionRouter = require("./routes/version"); // ✅ Import Route
 
 const app = express();
 
@@ -27,7 +28,7 @@ app.use("/users", userRouter);
 app.use("/seat", seatRouter);
 app.use("/order", orderRouter);
 app.use("/customers", customerRouter); // ✅ เพิ่มเส้นทางใหม่
-
+app.use("/version", versionRouter);
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
