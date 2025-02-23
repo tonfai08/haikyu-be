@@ -31,5 +31,20 @@ router.post("/upload-bulk", async (req, res) => {
     res.status(500).json({ error: "Failed to process JSON data" });
   }
 });
+router.get("/:twitter", async (req, res) => {
+  try {
+    const { twitter } = req.params;
 
+    const customer = await Customer.findOne({ twitter });
+
+    if (!customer) {
+      return res.status(404).json({ error: "Customer not found" });
+    }
+
+    res.json(customer);
+  } catch (error) {
+    console.error("❌ Error fetching customer:", error);
+    res.status(500).json({ error: "Failed to fetch customer data" });
+  }
+});
 module.exports = router;
