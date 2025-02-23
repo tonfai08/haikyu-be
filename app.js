@@ -27,7 +27,7 @@ mongoose
 app.use("/users", userRouter);
 app.use("/seat", seatRouter);
 app.use("/order", orderRouter);
-app.use("/customers", customerRouter); // ✅ เพิ่มเส้นทางใหม่
+//app.use("/customers", customerRouter);
 app.use("/version", versionRouter);
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
