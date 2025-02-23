@@ -1,0 +1,5 @@
+twitter,name,tel,book1,book2,typeShipping,totalPrice,status,postId
+@user1,John Doe,0812345678,1,2,express,500,shipped,123456
+,Unknown User,0801234567,0,1,standard,300,pending,  <-- ไม่มี Twitter จะถูกข้าม
+@user3,Alice Johnson,0823456789,2,0,express,700,completed,789123
+@newUser,New Customer,0898765432,1,1,express,450,pending,

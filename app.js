@@ -1,14 +1,18 @@
-require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
+require("dotenv").config();
+
 const userRouter = require("./routes/users");
 const seatRouter = require("./routes/seat");
 const orderRouter = require("./routes/order");
+const customerRouter = require("./routes/customer"); // ✅ Import Route
+
 const app = express();
-const cors = require("cors");
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
+app.use(cors());
 
 const mongoURI =
   process.env.MONGO_URI ||
@@ -19,12 +23,10 @@ mongoose
   .then(() => console.log("MongoDB connected successfully"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
-app.use(cors());
-app.use(express.json());
-
 app.use("/users", userRouter);
 app.use("/seat", seatRouter);
 app.use("/order", orderRouter);
+app.use("/customers", customerRouter); // ✅ เพิ่มเส้นทางใหม่
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
