@@ -11,7 +11,7 @@ router.get("/", async (req, res) => {
     const log = new VisitLog({ ip_address: ip });
     await log.save();
 
-    res.json({ message: "Visit logged", ip });
+    res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
