@@ -14,6 +14,9 @@ const customerSchema = new mongoose.Schema({
 
     default: "pending",
   },
+  setBook: {
+    type: String,
+  },
   postId: { type: String, default: null },
   postStatus: { type: String, default: null },
   slip: { type: String, required: true },
