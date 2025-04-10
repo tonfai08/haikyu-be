@@ -21,20 +21,41 @@ router.get("/", async (req, res) => {
   }
 });
 
-// ✅ POST: เพิ่มข้อความใหม่
 router.post("/", async (req, res) => {
-  try {
-    const { name, detail } = req.body;
-    if (!name || !detail) {
-      return res.status(400).json({ error: "Missing name or detail" });
+    try {
+      const { name, detail } = req.body;
+      if (!name || !detail) {
+        return res.status(400).json({ error: "Missing name or detail" });
+      }
+  
+      // ✅ ตรวจว่าคนนี้มีเกิน 15 ข้อความไหม
+      const count = await FloatingMessage.countDocuments({ name });
+  
+      if (count >= 15) {
+        // 🔥 ลบอันเก่าสุดของคนนั้น (เรียงจากเก่าไปใหม่)
+        await FloatingMessage.findOneAndDelete({ name }, { sort: { createdAt: 1 } });
+      }
+  
+      // ✅ เพิ่มข้อความใหม่
+      const newMsg = new FloatingMessage({ name, detail });
+      const result = await newMsg.save();
+  
+      res.status(201).json(result);
+    } catch (err) {
+      console.error("❌ Error in POST /floating:", err);
+      res.status(500).json({ error: "Failed to create message" });
     }
+  });
 
-    const newMsg = new FloatingMessage({ name, detail });
-    const result = await newMsg.save();
-    res.status(201).json(result);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to create message" });
-  }
-});
+router.delete("/", async (req, res) => {
+    try {
+      await FloatingMessage.deleteMany({});
+      res.status(200).json({ message: "All floating messages deleted." });
+    } catch (err) {
+      console.error("❌ Failed to delete all messages:", err);
+      res.status(500).json({ error: "Failed to delete all messages" });
+    }
+  });
+    
 
 module.exports = router;
