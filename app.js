@@ -38,7 +38,7 @@ app.use("/order", orderRouter);
 app.use("/customers", customerRouter);
 app.use("/version", versionRouter);
 app.use("/visit", visitRoutes);
-app.use("/api/floating", floatingLimiter, floatingRoute);
+app.use("/api/floating", floatingRoute);
 
 
 const port = process.env.PORT || 8080;
