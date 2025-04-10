@@ -11,15 +11,19 @@ const floatingSchema = new mongoose.Schema({
 
 const FloatingMessage = mongoose.model("FloatingMessage", floatingSchema);
 
-// ✅ GET: ดึงข้อความทั้งหมด
 router.get("/", async (req, res) => {
-  try {
-    const messages = await FloatingMessage.find().sort({ createdAt: -1 });
-    res.json(messages);
-  } catch (err) {
-    res.status(500).json({ error: "Server error" });
-  }
-});
+    try {
+      const limit = parseInt(req.query.limit) || 30;
+  
+      const messages = await FloatingMessage.find()
+        .sort({ createdAt: -1 })
+        .limit(limit);
+  
+      res.json(messages);
+    } catch (err) {
+      res.status(500).json({ error: "Server error" });
+    }
+  });
 
 const allowedNames = ["pum", "film", "mint", "ton", "aom", "pond"];
 
