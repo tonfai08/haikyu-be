@@ -21,31 +21,38 @@ router.get("/", async (req, res) => {
   }
 });
 
+const allowedNames = ["pum", "film", "mint", "ton", "aom", "pond"];
+
 router.post("/", async (req, res) => {
-    try {
-      const { name, detail } = req.body;
-      if (!name || !detail) {
-        return res.status(400).json({ error: "Missing name or detail" });
-      }
-  
-      // ✅ ตรวจว่าคนนี้มีเกิน 15 ข้อความไหม
-      const count = await FloatingMessage.countDocuments({ name });
-  
-      if (count >= 15) {
-        // 🔥 ลบอันเก่าสุดของคนนั้น (เรียงจากเก่าไปใหม่)
-        await FloatingMessage.findOneAndDelete({ name }, { sort: { createdAt: 1 } });
-      }
-  
-      // ✅ เพิ่มข้อความใหม่
-      const newMsg = new FloatingMessage({ name, detail });
-      const result = await newMsg.save();
-  
-      res.status(201).json(result);
-    } catch (err) {
-      console.error("❌ Error in POST /floating:", err);
-      res.status(500).json({ error: "Failed to create message" });
+  try {
+    const { name, detail } = req.body;
+    if (!name || !detail) {
+      return res.status(400).json({ error: "Missing name or detail" });
     }
-  });
+
+    // ✅ ตรวจว่า name อยู่ในลิสต์ที่อนุญาตหรือไม่
+    if (!allowedNames.includes(name)) {
+      return res.status(400).json({ error: `Invalid name: ${name}` });
+    }
+
+    const count = await FloatingMessage.countDocuments({ name });
+
+    if (count >= 15) {
+      await FloatingMessage.findOneAndDelete(
+        { name },
+        { sort: { createdAt: 1 } }
+      );
+    }
+
+    const newMsg = new FloatingMessage({ name, detail });
+    const result = await newMsg.save();
+
+    res.status(201).json(result);
+  } catch (err) {
+    console.error("❌ Error in POST /floating:", err);
+    res.status(500).json({ error: "Failed to create message" });
+  }
+});
 
 router.delete("/", async (req, res) => {
     try {
