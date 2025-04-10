@@ -30,6 +30,7 @@ const allowedNames = ["pum", "film", "mint", "ton", "aom", "pond"];
 router.post("/", async (req, res) => {
   try {
     const { name, detail } = req.body;
+
     if (!name || !detail) {
       return res.status(400).json({ error: "Missing name or detail" });
     }
@@ -37,6 +38,11 @@ router.post("/", async (req, res) => {
     // ✅ ตรวจว่า name อยู่ในลิสต์ที่อนุญาตหรือไม่
     if (!allowedNames.includes(name)) {
       return res.status(400).json({ error: `Invalid name: ${name}` });
+    }
+
+    // ✅ เช็คความยาวข้อความ detail
+    if (detail.length > 100) {
+      return res.status(400).json({ error: "Detail must not exceed 100 characters" });
     }
 
     const count = await FloatingMessage.countDocuments({ name });
@@ -57,6 +63,7 @@ router.post("/", async (req, res) => {
     res.status(500).json({ error: "Failed to create message" });
   }
 });
+
 
 router.delete("/", async (req, res) => {
     try {
