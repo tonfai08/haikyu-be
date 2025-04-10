@@ -37,7 +37,7 @@ router.post("/", async (req, res) => {
 
     const count = await FloatingMessage.countDocuments({ name });
 
-    if (count >= 10) {
+    if (count >= 7) {
       await FloatingMessage.findOneAndDelete(
         { name },
         { sort: { createdAt: 1 } }
