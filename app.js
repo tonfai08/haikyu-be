@@ -9,7 +9,7 @@ const orderRouter = require("./routes/order");
 const customerRouter = require("./routes/customer"); // ✅ Import Route
 const versionRouter = require("./routes/version"); // ✅ Import Route
 const visitRoutes = require("./routes/visit");
-
+const floatingRoute = require("./routes/floating");
 const app = express();
 
 app.use(express.json({ limit: "10mb" }));
@@ -31,6 +31,8 @@ app.use("/order", orderRouter);
 app.use("/customers", customerRouter);
 app.use("/version", versionRouter);
 app.use("/visit", visitRoutes);
+app.use("/api/floating", floatingRoute);
+
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
