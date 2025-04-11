@@ -38,12 +38,7 @@ app.use("/order", orderRouter);
 app.use("/customers", customerRouter);
 app.use("/version", versionRouter);
 app.use("/visit", visitRoutes);
-app.use("/api/floating", (req, res, next) => {
-  if (req.method === "POST") {
-    return floatingLimiter(req, res, next); // ✅ ใช้ limiter เฉพาะ POST
-  }
-  next(); // ✅ อื่นๆ ไปต่อ
-}, floatingRoute);
+app.use("/api/floating", floatingRoute);
 
 
 const port = process.env.PORT || 8081;
