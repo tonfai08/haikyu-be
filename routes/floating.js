@@ -101,15 +101,15 @@ router.post("/", async (req, res) => {
 });
 
 
-router.delete("/", async (req, res) => {
-    try {
-      await FloatingMessage.deleteMany({});
-      res.status(200).json({ message: "All floating messages deleted." });
-    } catch (err) {
-      console.error("❌ Failed to delete all messages:", err);
-      res.status(500).json({ error: "Failed to delete all messages" });
-    }
-  });
+// router.delete("/", async (req, res) => {
+//     try {
+//       await FloatingMessage.deleteMany({});
+//       res.status(200).json({ message: "All floating messages deleted." });
+//     } catch (err) {
+//       console.error("❌ Failed to delete all messages:", err);
+//       res.status(500).json({ error: "Failed to delete all messages" });
+//     }
+//   });
     
 
 module.exports = router;
