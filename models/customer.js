@@ -5,18 +5,22 @@ const customerSchema = new mongoose.Schema({
   name: { type: String, required: true },
   address: { type: String, required: true },
   tel: { type: String, required: true },
-  book1: { type: Number, required: true },
-  book2: { type: Number, required: true },
+  books: {
+    type: new mongoose.Schema({
+      krtBook: { type: Number, default: 0 },
+      khnBook: { type: Number, default: 0 }, 
+      premiere: { type: Number, default: 0 },
+      krtBox: { type: Number, default: 0 }, 
+      khnBox: { type: Number, default: 0 }, 
+      blockbuster: { type: Number, default: 0 },
+      additional: { type: Number, default: 0 }, 
+    }),
+    default: {},
+  },
   totalPrice: { type: Number, required: true },
   typeShipping: { type: String, default: "standard" },
-  status: {
-    type: String,
-
-    default: "pending",
-  },
-  setBook: {
-    type: String,
-  },
+  status: { type: String, default: "pending" },
+  setBook: { type: String },
   postId: { type: String, default: null },
   postStatus: { type: String, default: null },
   slip: { type: String, required: true },
