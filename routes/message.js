@@ -1,25 +1,21 @@
 const express = require("express");
-const fs = require("fs");
-const path = require("path");
-
 const router = express.Router();
-const dataPath = path.join(__dirname, "../data/message.json");
+const Message = require("../models/message");
 
-// สร้างไฟล์ถ้ายังไม่มี
-if (!fs.existsSync(dataPath)) {
-  fs.writeFileSync(dataPath, JSON.stringify({ message: "Hello ESP32!" }, null, 2));
-}
-
+// GET - ดึงข้อความล่าสุด
 router.get("/", async (req, res) => {
   try {
-    const raw = fs.readFileSync(dataPath);
-    const { message } = JSON.parse(raw);
-    res.json({ success: true, message });
+    const latest = await Message.findOne().sort({ createdAt: -1 });
+    res.json({
+      success: true,
+      message: latest?.text || "No message yet",
+    });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
 });
 
+// POST - สร้างหรืออัปเดตข้อความ
 router.post("/", async (req, res) => {
   try {
     const { message } = req.body;
@@ -27,8 +23,10 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ success: false, error: "Message is required." });
     }
 
-    fs.writeFileSync(dataPath, JSON.stringify({ message }, null, 2));
-    res.json({ success: true, message });
+    const newMessage = new Message({ text: message });
+    await newMessage.save();
+
+    res.json({ success: true, message: newMessage.text });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
