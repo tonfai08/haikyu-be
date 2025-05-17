@@ -11,6 +11,7 @@ const customerRouter = require("./routes/customer"); // ✅ Import Route
 const versionRouter = require("./routes/version"); // ✅ Import Route
 const visitRoutes = require("./routes/visit");
 const floatingRoute = require("./routes/floating");
+const messageRoute = require("./routes/message");
 const app = express();
 
 const floatingLimiter = rateLimit({
@@ -39,7 +40,7 @@ app.use("/customers", customerRouter);
 app.use("/version", versionRouter);
 app.use("/visit", visitRoutes);
 app.use("/api/floating", floatingRoute);
-
+app.use("/message", messageRoute);
 
 const port = process.env.PORT || 8081;
 app.listen(port, () => {
