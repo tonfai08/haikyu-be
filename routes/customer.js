@@ -41,6 +41,11 @@ router.get("/:twitter", async (req, res) => {
       return res.status(404).json({ error: "Customer not found" });
     }
 
+    await CustomerLog.create({
+      customerId: customer._id,
+      twitter: customer.twitter
+    });
+
     res.json(customer);
   } catch (error) {
     console.error("❌ Error fetching customer:", error);
